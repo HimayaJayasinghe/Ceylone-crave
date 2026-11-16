@@ -1,0 +1,103 @@
+@import "tailwindcss";
+
+/* Layout: a dessert counter. Dark Kithul-treacle hero with a round "plate" photo,
+   then a printed menu with dotted price leaders, an ingredient swap list,
+   an order slip you fill in, the founders, and questions. */
+
+/* Brand colours as CSS variables. The site is light-only by design,
+   so it looks the same whatever the visitor's device theme is. */
+:root {
+  --bg: #ffffff;
+  --surface: #f6f0ea;
+  --surface-2: #ede2d6;
+  --ink: #2a1a14;
+  --muted: #6b574c;
+  --line: #e7dbcf;
+  --accent: #b04e26; /* cinnamon */
+  --gold: #e3a33a; /* mango / Kithul gold */
+  --on-gold: #2a1a14;
+  --leaf: #4f6a2c;
+  --band: #fbf3ea; /* soft coconut-sugar sections: hero, ingredients, story, footer */
+  --band-2: #ffffff; /* cards sitting on a band */
+  --on-band: #2a1a14;
+  --on-band-muted: #6b574c;
+  --shadow: 0 10px 30px rgb(90 55 35 / 0.1);
+  color-scheme: light;
+}
+
+/* Expose the variables to Tailwind: bg-page, text-ink, bg-band, text-on-band, font-display … */
+@theme inline {
+  --color-page: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-gold: var(--gold);
+  --color-on-gold: var(--on-gold);
+  --color-leaf: var(--leaf);
+  --color-band: var(--band);
+  --color-band-2: var(--band-2);
+  --color-on-band: var(--on-band);
+  --color-on-band-muted: var(--on-band-muted);
+  --shadow-soft: var(--shadow);
+  --font-display: "Young Serif", Georgia, "Times New Roman", serif;
+  --font-sans: "Figtree", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+@layer base {
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3 { font-family: var(--font-display); font-weight: 400; line-height: 1.12; letter-spacing: -0.01em; text-wrap: balance; }
+  section { scroll-margin-top: 72px; }
+  :focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; border-radius: 6px; }
+}
+
+/* Centered content column with a safe side gutter (16px phones, 32px wider). */
+@utility wrap {
+  max-width: 1120px;
+  margin-inline: auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  @media (width >= 720px) {
+    padding-left: max(32px, env(safe-area-inset-left, 0px));
+    padding-right: max(32px, env(safe-area-inset-right, 0px));
+  }
+}
+
+@layer components {
+  .eyebrow { font-size: 0.8125rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; border-radius: 999px;
+    font-weight: 600; line-height: 1; text-decoration: none; border: 1.5px solid transparent; cursor: pointer;
+    transition: transform 0.15s ease, background-color 0.15s ease;
+  }
+  .btn:hover { transform: translateY(-1px); }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+  .btn-gold { background: var(--gold); color: var(--on-gold); }
+  .btn-ghost { border-color: var(--ink); color: var(--ink); }
+  .btn-ghost:hover { background: color-mix(in srgb, var(--ink) 6%, transparent); }
+  .btn-ink { background: var(--ink); color: var(--bg); }
+
+  /* menu: dotted leader between dish name and price */
+  .leader { flex: 1; min-width: 16px; border-bottom: 2px dotted var(--line); transform: translateY(-4px); }
+
+  /* order slip quantity inputs without browser spinners */
+  .qty { -moz-appearance: textfield; appearance: textfield; }
+  .qty::-webkit-outer-spin-button, .qty::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+  /* FAQ +/– marker */
+  .faq summary { list-style: none; }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after { content: "+"; color: var(--accent); font: 400 1.5rem/1 var(--font-display); }
+  .faq details[open] summary::after { content: "–"; }
+}
